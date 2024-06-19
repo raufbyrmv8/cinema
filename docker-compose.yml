@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  cinema_mysql:
+    image: mysql
+    restart: on-failure
+    ports:
+      - "3308:3306"
+    volumes:
+      - ms_database:/var/lib/cinema
+    networks:
+      - ms_network
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'cinema'
+
+
+  cinema:
+    image: raufbyrmv8/cinema:1
+    restart: on-failure
+    ports:
+      - "3030:9090"
+    environment:
+      DB_CONNECTION_IP: "cinema_mysql"
+      DB_CONNECTION_PORT: 3306
+    networks:
+      - ms_network
+    depends_on:
+      - "cinema_mysql"
+
+
+
+
+
+volumes:
+  ms_database:
+
+networks:
+  ms_network:
